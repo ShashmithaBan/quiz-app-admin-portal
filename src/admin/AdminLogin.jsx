@@ -16,6 +16,22 @@ const AdminLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     dispatch(loginStart());
+    if (!email || !password) {
+      dispatch(loginFailure('Please fill all the fields'));
+      return;
+  }
+  
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+      dispatch(loginFailure('Please enter a valid email address'));
+      return;
+  }
+  
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  if (!passwordRegex.test(password)) {
+      dispatch(loginFailure('Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, and one number'));
+      return;
+  }
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
@@ -39,14 +55,14 @@ const AdminLogin = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
-              required = {true}
+              
             />
             <Input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              required = {true}
+              
             />
             <button
               type="submit"

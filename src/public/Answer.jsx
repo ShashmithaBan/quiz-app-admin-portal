@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import Timer from '../components/Reusable/Timer';
 
-function Answer({ options, correctAnswer, onSelectAnswer }) {
+function Answer({ options, correctAnswer, onSelectAnswer , handleNextQuestion }) {
 
   const handleAnswerClick = (option , index) => {
     // setSelectedIndex(index);
@@ -21,7 +22,9 @@ function Answer({ options, correctAnswer, onSelectAnswer }) {
         >
           {option}
         </button>
+
       ))}
+      {/* <Timer timeout={5000} onTimeOut={handleNextQuestion} /> */}
     </div>
   );
 }

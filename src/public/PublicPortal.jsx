@@ -110,6 +110,7 @@ function PublicPortal() {
           onSelectAnswer={(selectedOption, isCorrect) =>
             handleSelectAnswer(selectedOption, isCorrect)
           }
+          handleNextQuestion = {handleNextQuestion}
         />
         {/* <Timer timeout={} onTimeOut={handleNextQuestion} /> */}
         <p className='text-xl'>Selected Answer: <span className='text-green-500 font-bold'>{selectedAnswer || 'None'}</span></p>
