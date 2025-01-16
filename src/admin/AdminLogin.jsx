@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginStart, loginSuccess, loginFailure } from '../store/slice/authSlice';
 import { auth, signInWithEmailAndPassword } from '../firebase';
-import Input from '../components/Reusable/Input'; 
+import Input from '../components/Reusable/Input';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.auth);
@@ -19,19 +19,34 @@ const AdminLogin = () => {
     if (!email || !password) {
       dispatch(loginFailure('Please fill all the fields'));
       return;
-  }
-  
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
       dispatch(loginFailure('Please enter a valid email address'));
       return;
-  }
-  
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
-  if (!passwordRegex.test(password)) {
-      dispatch(loginFailure('Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, and one number'));
+    }
+
+    if (password.length < 8) {
+      dispatch(loginFailure('Password must be at least 8 characters long'));
       return;
-  }
+    }
+
+    if (!/[a-z]/.test(password)) {
+      dispatch(loginFailure('Password must include at least one lowercase letter'));
+      return;
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      dispatch(loginFailure('Password must include at least one uppercase letter'));
+      return;
+    }
+
+    if (!/\d/.test(password)) {
+      dispatch(loginFailure('Password must include at least one number'));
+      return;
+    }
+
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
@@ -55,14 +70,14 @@ const AdminLogin = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
-              
+
             />
             <Input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              
+
             />
             <button
               type="submit"
